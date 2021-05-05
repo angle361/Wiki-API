@@ -19,6 +19,11 @@ const articleSchema = {
 
 const Article = mongoose.model("Article",articleSchema);  //here we made our collection named articles
 
+
+//////////////////////////////////////////Requesting all the articles/////////////////////////////////////////
+
+
+// app.route("/articles").get().post().delete();
 app.get("/articles",function(req,res){
   Article.find(function(err,foundArticles){
     res.send(foundArticles);
@@ -51,6 +56,10 @@ app.delete("/articles",function(req,res){
    }
   });
 })
+
+
+
+/////////////////////////////////////////Requesting a single articles/////////////////////////////////////////
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");

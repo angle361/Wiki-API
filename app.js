@@ -10,13 +10,16 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+// connecting db
 mongoose.connect("mongodb://localhost:27017/wikiDB",{useNewUrlParser : true});
 
+//making schema
 const articleSchema = {
   title: String,
   content: String
 };
 
+//making collection
 const Article = mongoose.model("Article",articleSchema);  //here we made our collection named articles
 
 
@@ -60,6 +63,20 @@ app.delete("/articles",function(req,res){
 
 
 /////////////////////////////////////////Requesting a single articles/////////////////////////////////////////
+
+app.route("/articles/:articleTitle")
+
+.get(function(req,res){
+    Article.findOne({title : req.params.articleTitle},function(err,foundArticle){
+      if(foundArticle){
+        res.send(foundArticle);
+      }
+      else{
+        res.send("no such article is found");
+      }
+    })
+});
+
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");

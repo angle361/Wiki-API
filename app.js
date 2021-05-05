@@ -29,7 +29,7 @@ const Article = mongoose.model("Article",articleSchema);  //here we made our col
 // app.route("/articles").get().post().delete();
 app.get("/articles",function(req,res){
   Article.find(function(err,foundArticles){
-    res.send(foundArticles);
+    res.send(foundArticles);                          ////when we want the existing document
   })
 })
 
@@ -39,7 +39,7 @@ app.post("/articles",function(req,res){
 
     const newArticle = new Article({
       title : req.body.title,
-      content : req.body.content
+      content : req.body.content                 ///when we want to add document
     });
 
     newArticle.save(function(err){
@@ -55,8 +55,8 @@ app.post("/articles",function(req,res){
 app.delete("/articles",function(req,res){
   Article.deleteMany(function(err){
    if(!err){
-     res.send("successfully deleted");
-   }
+     res.send("successfully deleted");              ///when we want to delete document
+   } 
   });
 })
 
@@ -75,6 +75,48 @@ app.route("/articles/:articleTitle")
         res.send("no such article is found");
       }
     })
+})
+
+.put(function(req,res){
+  Article.update(
+    {title : req.params.articleTitle},
+    {title: req.body.title,content : req.body.content},
+    {overwrite: true},
+    function(err){
+      if(!err){
+        res.send("successfully updated");
+      }
+      else{
+        res.send(err);
+      }
+    }
+  );
+})
+
+.patch(function(req,res){
+  Article.update(
+    {title : req.params.articleTitle},
+    {$set: req.body},
+    function(err){
+      if(!err){
+        res.send("successfully updated");
+      }
+      else{
+        res.send(err);
+      }
+    }
+  );
+})
+
+.delete(function(req,res){
+   Article.deleteOne({title : req.params.articleTitle},function(err){
+    if(!err){
+      res.send("successfully deleted");
+    }
+    else{
+      res.send(err);
+    }
+   });
 });
 
 
